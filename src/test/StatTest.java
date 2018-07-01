@@ -11,6 +11,8 @@ class StatTest {
 
 	@Test
 	void specifyAllSetsFieldsTest() {
+		SQLiteTestData.buildEntireDatabase();
+
 		StatDao test = new StatDaoImpl();
 		String playerSql = "= 1";
 		String formatSql = "= 'Bo3'";
