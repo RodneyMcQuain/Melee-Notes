@@ -249,6 +249,14 @@ public class SQLiteTestData {
 		}
     }
     
+    public static void deleteDatabaseFile() {
+    	File file = new File("melee.db");
+    	
+    	if (file.delete()) {
+    		System.out.println("Database file deleted.");
+    	}
+    }
+    
     public static int massPopulateDatabase(int i) {    	
     	if (i > 100) {
     		return 0;
