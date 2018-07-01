@@ -1,19 +1,11 @@
 package main;
-import java.io.File;
-import java.sql.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.print.attribute.standard.PrinterLocation;
-
-import com.sun.javafx.css.StyleManager;
-
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,24 +18,18 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import test.SQLiteTestData;
 
 public class app extends Application {	
 	//private Connection c = Utilities.getConnection();
@@ -228,8 +214,6 @@ public class app extends Application {
 	
 	public static void main(String[] args) {
 		SQLiteUtils.buildBlankDatabase();
-//		SQLiteTestData.buildEntireDatabase();
-//		SQLiteUtils.massPopulateDatabase(0);
 		Application.launch(args);
 	}
 	
