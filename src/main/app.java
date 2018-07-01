@@ -43,6 +43,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import test.SQLiteTestData;
 
 public class app extends Application {	
 	//private Connection c = Utilities.getConnection();
@@ -226,8 +227,8 @@ public class app extends Application {
     }
 	
 	public static void main(String[] args) {
-//		SQLiteUtils.buildBlankDatabase();
-		SQLiteUtils.buildEntireDatabase();
+		SQLiteUtils.buildBlankDatabase();
+//		SQLiteTestData.buildEntireDatabase();
 //		SQLiteUtils.massPopulateDatabase(0);
 		Application.launch(args);
 	}
