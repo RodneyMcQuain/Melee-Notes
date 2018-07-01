@@ -2915,7 +2915,7 @@ public class app extends Application {
 			new Thread(new Runnable() {
 				public void run() {
 					String date = cbDate.getValue();
-			    	VBox root = new VBox();
+			    	GridPane moneyReportCenterPane = new GridPane();
 			    	String totalMoneyString = null;
 			    	MoneyDao moneyDao = new MoneyDaoImpl();
 			    	List<Tournament> tournaments;
@@ -2938,9 +2938,7 @@ public class app extends Application {
 					} else {
 						tournaments = tournamentDao.getAllTournaments(userID);
 					}
-					
-					//gotta appease that compiler
-					
+										
 					int tournamentRowCount = tournaments.size();
 					if (tournamentRowCount != 0) {
 						DecimalFormat dfMoney = new DecimalFormat("$#.00");
@@ -2949,14 +2947,37 @@ public class app extends Application {
 				 		int entryFeeTotal = 0;
 				 		int venueFeeTotal = 0;
 				 		int travelExpenseTotal = 0;
-						Label lblMoneyHeader;
-				 		Label lblMoney;
 				 		Label[] lblTournaments = new Label[tournamentRowCount];
+				 		int gridPaneRowCount = 1;
 				    	for (int i = 0; i < tournamentRowCount; i++) {
-				 			if (i != 0) {
-			       				root.getChildren().addAll(new Label());
-				 			} else if (i == 0) {
-				 				//set headers
+				    		//creates a line break
+				 			if (i == 0) {
+				 				String blankSpace = "     ";
+					 			Font moneyHeaderFont = Font.font("Verdana", FontWeight.BOLD, 14);
+					 			Label lblBlankLine = new Label("\t\t");
+					 			Label prizeMoney = new Label("Prize Money" + blankSpace);
+					 			Label moneyMatch = new Label("Money Match" + blankSpace);
+					 			Label entryFee = new Label("Entry Fee" + blankSpace);
+					 			Label venueFee = new Label("Venue Fee" + blankSpace);
+					 			Label travelExpenses = new Label("Travel Expenses");
+
+					 			lblBlankLine.setFont(moneyHeaderFont);
+					 			prizeMoney.setFont(moneyHeaderFont);
+					 			moneyMatch.setFont(moneyHeaderFont);
+					 			entryFee.setFont(moneyHeaderFont);
+					 			venueFee.setFont(moneyHeaderFont);
+					 			travelExpenses.setFont(moneyHeaderFont);
+					 			
+					 			moneyReportCenterPane.add(lblBlankLine, 0, 0);
+					 			moneyReportCenterPane.add(prizeMoney, 1, 0);
+					 			moneyReportCenterPane.add(moneyMatch, 2, 0);
+					 			moneyReportCenterPane.add(entryFee, 3, 0);
+					 			moneyReportCenterPane.add(venueFee, 4, 0);
+					 			moneyReportCenterPane.add(travelExpenses, 5, 0);
+					 			moneyReportCenterPane.add(new Label(""), 0, 1);
+				 			} else {
+					 			moneyReportCenterPane.add(new Label("\t"), 0, gridPaneRowCount);
+					 			gridPaneRowCount += 1;	
 				 			}
 
 				 			tournamentID = tournaments.get(i).getTournamentID();
@@ -2967,39 +2988,57 @@ public class app extends Application {
 				 			lblTournaments[i] = new Label();
 				 			lblTournaments[i].setText((i + 1) + ". " + nameTournament + " - " + formattedDate);
 				 			lblTournaments[i].setFont(Font.font("Verdana", FontWeight.BOLD, 16));
-			   				root.getChildren().addAll(lblTournaments[i]);
-			   				
+				 			moneyReportCenterPane.add(lblTournaments[i], 0, gridPaneRowCount, 5, 1); //(i + 1) to not conflict with header information
+			 				gridPaneRowCount += 1;
+
 				 			Money money = moneyDao.getMoneyByTournamentId(tournamentID);
 				 			int prizeMoney = money.getPrizeMoney();
 				 			int moneyMatch = money.getMoneyMatch();
 				 			int entryFee = money.getEntryFee();
 				 			int venueFee = money.getVenueFee();
 				 			int travelExpense = money.getTravelExpense();
+				 			
 			   				prizeMoneyTotal += prizeMoney;
 				 			moneyMatchTotal += moneyMatch;
 				 			entryFeeTotal += entryFee;
 				 			venueFeeTotal += venueFee;
 				 			travelExpenseTotal += travelExpense;
 
-				 			lblMoneyHeader = new Label("\tPrizeMoney\t Money Match\t Entry Fee\t Venue Fee\t Travel Expenses");
-				 			lblMoney = new Label("\t" + dfMoney.format(prizeMoney) + "\t\t" + dfMoney.format(moneyMatch) + "\t\t" 
-				 						+ dfMoney.format(entryFee) + "\t\t" + dfMoney.format(venueFee) + "\t\t" + dfMoney.format(travelExpense));
-				 			root.getChildren().addAll(lblMoneyHeader, lblMoney);
+				 			Label lblPrizeMoney = new Label(dfMoney.format(prizeMoney));
+				 			Label lblMoneyMatch = new Label(dfMoney.format(moneyMatch));
+				 			Label lblEntryFee = new Label(dfMoney.format(entryFee));
+				 			Label lblVenueFee = new Label(dfMoney.format(venueFee));
+				 			Label lblTravelExpense = new Label(dfMoney.format(travelExpense));
+
+				 			Font moneyInformationFont = Font.font("Verdana", 12);
+				 			lblPrizeMoney.setFont(moneyInformationFont);
+				 			lblMoneyMatch.setFont(moneyInformationFont);
+				 			lblEntryFee.setFont(moneyInformationFont);
+				 			lblVenueFee.setFont(moneyInformationFont);
+				 			lblTravelExpense.setFont(moneyInformationFont);
+
+				 			moneyReportCenterPane.add(new Label(""), 0, gridPaneRowCount);
+				 			moneyReportCenterPane.add(lblPrizeMoney, 1, gridPaneRowCount);
+				 			moneyReportCenterPane.add(lblMoneyMatch, 2, gridPaneRowCount);
+				 			moneyReportCenterPane.add(lblEntryFee, 3, gridPaneRowCount);
+				 			moneyReportCenterPane.add(lblVenueFee, 4, gridPaneRowCount);
+				 			moneyReportCenterPane.add(lblTravelExpense, 5, gridPaneRowCount);
+			 				gridPaneRowCount += 1; 
 				    	}
 				    	
+				    	//total money in footer
 				    	totalMoneyString = "Total: " + dfMoney.format(prizeMoneyTotal) + "\t\t" + dfMoney.format(moneyMatchTotal) + "\t\t" 
 								+ dfMoney.format(entryFeeTotal) + "\t\t" + dfMoney.format(venueFeeTotal) + "\t\t" 
 								+ dfMoney.format(travelExpenseTotal);
-						lblMoneyTotal.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
+						lblMoneyTotal.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
 					} else {
-		   				root.getChildren().addAll(new Label("No tournaments with those specifications exist."));
+						moneyReportCenterPane.getChildren().addAll(new Label("No tournaments with those specifications exist."));
 					}
 					
-					
-			    	final String totalMoneyStringFinal = totalMoneyString;
+			    	final String totalMoneyStringFinal = totalMoneyString; //appeasing compiler
 					Platform.runLater(new Runnable() {
 						public void run() {
-							moneyReportScrollPane.setContent(root);
+							moneyReportScrollPane.setContent(moneyReportCenterPane);
 							lblMoneyTotal.setText(totalMoneyStringFinal);
 						}
 					});
@@ -3016,7 +3055,7 @@ public class app extends Application {
 		moneyReportBorderPane.setCenter(moneyReportScrollPane);
 		moneyReportBorderPane.setBottom(moneyReportPaneBottom);
 		
-		moneyReportScene = new Scene(moneyReportBorderPane, 700, 600);
+		moneyReportScene = new Scene(moneyReportBorderPane, 700, 620);
 		moneyReportScene.getStylesheets().add("main/assets/stylesheets/stylesheet.css");
 	}
 	
