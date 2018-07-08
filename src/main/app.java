@@ -2554,11 +2554,12 @@ public class app extends Application {
 					String startDateString = startDate.toString();
 					String endDateString = endDate.toString();
 
+					Stat stat = new Stat(playerSql, myCharacterSql, opponentCharacterSql, formatSql, typeSql, startDateString, endDateString);
 					StatDao statDao = new StatDaoImpl();
-					int wonSetCount = statDao.calculateSetsWon(playerSql, formatSql, typeSql, startDateString, endDateString);
-					int lostSetCount = statDao.calculateSetsLost(playerSql, formatSql, typeSql, startDateString, endDateString);
-					int[] wonGames = statDao.calculateGamesWonOnStages(playerSql, myCharacterSql, opponentCharacterSql, formatSql, typeSql, startDateString, endDateString);
-					int[] lostGames = statDao.calculateGamesLostOnStages(playerSql, myCharacterSql, opponentCharacterSql, formatSql, typeSql, startDateString, endDateString);
+					int wonSetCount = statDao.calculateSetsWon(stat);
+					int lostSetCount = statDao.calculateSetsLost(stat);
+					int[] wonGames = statDao.calculateGamesWonOnStages(stat);
+					int[] lostGames = statDao.calculateGamesLostOnStages(stat);
 					
 					String startDateFormatted = GeneralUtils.formatDate(startDateString);
 					String endDateFormatted = GeneralUtils.formatDate(endDateString);

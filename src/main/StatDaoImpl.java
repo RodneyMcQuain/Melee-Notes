@@ -6,15 +6,16 @@ import java.sql.Statement;
 public class StatDaoImpl implements StatDao {
 
 	@Override
-	public int calculateSetsWon(String playerSql, String formatSql, String typeSql, String startDate, String endDate) {
+	public int calculateSetsWon(Stat stat) {
 		ResultSet rs = null;
 		Statement stmt = null;
-//		String playerChoice = stat.getPlayerChoice();
-//		String myCharacterChoice = stat.getMyCharacterChoice();
-//		String opponentCharacterChoice = stat.getOpponenentCharacterChoice();
-//		String formatChoice = stat.getFormatChoice();
-//		String typeChoice = stat.getTypeChoice();
-
+		
+		String playerSql = stat.getPlayerSql();
+		String formatSql = stat.getFormatSql();
+		String typeSql = stat.getTypeSql();
+		String startDate = stat.getStartDate();
+		String endDate = stat.getEndDate();
+		
 		Connection con = SQLiteUtils.getConnection();
 		
 		try {
@@ -41,9 +42,16 @@ public class StatDaoImpl implements StatDao {
 	}
 
 	@Override
-	public int calculateSetsLost(String playerSql, String formatSql, String typeSql, String startDate, String endDate) {
+	public int calculateSetsLost(Stat stat) {
 		ResultSet rs = null;
 		Statement stmt = null;
+		
+		String playerSql = stat.getPlayerSql();
+		String formatSql = stat.getFormatSql();
+		String typeSql = stat.getTypeSql();
+		String startDate = stat.getStartDate();
+		String endDate = stat.getEndDate();
+		
 		Connection con = SQLiteUtils.getConnection();
 		
 		try {
@@ -70,10 +78,19 @@ public class StatDaoImpl implements StatDao {
 	}
 
 	@Override
-	public int[] calculateGamesWonOnStages(String playerSql, String myCharacterSql, String opponentCharacterSql, String formatSql, String typeSql, String startDate, String endDate) {
+	public int[] calculateGamesWonOnStages(Stat stat) {
 		final int AMOUNT_OF_STAGES = 6;
 		ResultSet rs = null;
 		Statement stmt = null;
+		
+		String playerSql = stat.getPlayerSql();
+		String myCharacterSql = stat.getMyCharacterSql();
+		String opponentCharacterSql = stat.getOpponenentCharacterSql();
+		String formatSql = stat.getFormatSql();
+		String typeSql = stat.getTypeSql();
+		String startDate = stat.getStartDate();
+		String endDate = stat.getEndDate();
+		
 		Connection con = SQLiteUtils.getConnection();
 		
 		try {
@@ -109,10 +126,19 @@ public class StatDaoImpl implements StatDao {
 	}
 
 	@Override
-	public int[] calculateGamesLostOnStages(String playerSql, String myCharacterSql, String opponentCharacterSql, String formatSql, String typeSql, String startDate, String endDate) {
+	public int[] calculateGamesLostOnStages(Stat stat) {
 		final int AMOUNT_OF_STAGES = 6;
 		ResultSet rs = null;
 		Statement stmt = null;
+		
+		String playerSql = stat.getPlayerSql();
+		String myCharacterSql = stat.getMyCharacterSql();
+		String opponentCharacterSql = stat.getOpponenentCharacterSql();
+		String formatSql = stat.getFormatSql();
+		String typeSql = stat.getTypeSql();
+		String startDate = stat.getStartDate();
+		String endDate = stat.getEndDate();
+		
 		Connection con = SQLiteUtils.getConnection();
 		
 		try {

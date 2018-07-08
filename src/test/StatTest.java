@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
+import main.Stat;
 import main.StatDao;
 import main.StatDaoImpl;
 
@@ -22,8 +23,10 @@ class StatTest {
 		String typeSql = "= 'Tournament'";
 		String startDate = "2013-01-05";
 		String endDate = "2017-01-05";
-		int setsWon = test.calculateSetsWon(playerSql, formatSql, typeSql, startDate, endDate);
-		int setsLost = test.calculateSetsLost(playerSql, formatSql, typeSql, startDate, endDate);
+		Stat stat = new Stat(playerSql, formatSql, typeSql, startDate, endDate);
+		
+		int setsWon = test.calculateSetsWon(stat);
+		int setsLost = test.calculateSetsLost(stat);
 
 		assertEquals(3, setsWon);
 		assertEquals(3, setsLost);
@@ -40,9 +43,10 @@ class StatTest {
 		String typeSql = "LIKE '%' OR format IS NULL OR format = ' '";
 		String startDate = "2000-01-01";
 		String endDate = LocalDate.now().toString();
+		Stat stat = new Stat(playerSql, formatSql, typeSql, startDate, endDate);
 
-		int setsWon = test.calculateSetsWon(playerSql, formatSql, typeSql, startDate, endDate);
-		int setsLost = test.calculateSetsLost(playerSql, formatSql, typeSql, startDate, endDate);
+		int setsWon = test.calculateSetsWon(stat);
+		int setsLost = test.calculateSetsLost(stat);
 
 		assertEquals(7, setsWon);
 		assertEquals(8, setsLost);
