@@ -57,13 +57,13 @@ public class SQLiteTestData {
 		try {
 	 		stmt = con.createStatement();
 	 		String sql = "INSERT INTO moneys (tournamentID, prizeMoney, moneyMatch, entryFee, venueFee, travelExpense) " +
-	 					 "VALUES (1, 60, 5, 10, 5, 20), " +
-	 					 "(2, 60, 5, 10, 5, 20), " + 
-	 					 "(3, 60, 5, 10, 5, 20), " + 
-	 					 "(4, 60, 5, 10, 5, 20), " + 
-	 					 "(5, 60, 5, 10, 5, 20), " + 
-	 					 "(6, 60, 5, 10, 5, 20), " + 
-	 					 "(7, 60, 5, 10, 5, 20);"; 
+	 					 "VALUES (1, 5, 5, 10, 10, 20), " +
+	 					 "(2, 20, 5, 10, 20, 10), " + 
+	 					 "(3, 50, 0, 5, 5, 20), " + 
+	 					 "(4, 0, 5, 75, 60, 100), " + 
+	 					 "(5, 45, 0, 10, 5, 20), " + 
+	 					 "(6, 5, 0, 10, 5, 20), " + 
+	 					 "(7, 30, 10, 10, 5, 20);"; 
 	 		stmt.executeUpdate(sql);
 		} catch (Exception ex) {
 			ex.printStackTrace();
