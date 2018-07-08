@@ -4,7 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import main.Money;
 import main.MoneyDao;
@@ -13,12 +14,10 @@ import main.Tournament;
 import main.TournamentDao;
 import main.TournamentDaoImpl;
 
-class MoneyReportTest {
+public class MoneyReportTest {
+	
 	@Test
-	void moneyTotalsTest() {
-		SQLiteTestData.deleteDatabaseFile();
-		SQLiteTestData.buildEntireDatabase();
-				
+	public void moneyTotalsTest() {
     	MoneyDao moneyDao = new MoneyDaoImpl();
 		TournamentDao tournamentDao = new TournamentDaoImpl();
 		final int USER_ID = 1;

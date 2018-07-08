@@ -4,19 +4,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import main.Stat;
 import main.StatDao;
 import main.StatDaoImpl;
 
-class StatTest {
+public class StatTest {
 
 	@Test
-	void specifyAllSetsFieldsTest() {
-		SQLiteTestData.deleteDatabaseFile();
-		SQLiteTestData.buildEntireDatabase();
-
+	public void specifyAllSetsFieldsTest() {
 		StatDao test = new StatDaoImpl();
 		String playerSql = "= 1";
 		String formatSql = "= 'Bo3'";
@@ -33,10 +31,7 @@ class StatTest {
 	}
 	
 	@Test
-	void allSetsFieldsTest() {
-		SQLiteTestData.deleteDatabaseFile();
-		SQLiteTestData.buildEntireDatabase();
-
+	public void allSetsFieldsTest() {
 		StatDao test = new StatDaoImpl();
 		String playerSql = "LIKE '%' OR tag IS NULL OR tag = ' '";
 		String formatSql = "LIKE '%' OR type IS NULL OR type = ' '";
