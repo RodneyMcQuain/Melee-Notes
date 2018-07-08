@@ -2495,118 +2495,116 @@ public class app extends Application {
 		GridPane.setHalignment(lblGameCountPokemonStadium, HPos.CENTER);
 		
 		btGetStats.setOnAction(e -> {
-			new Thread(new Runnable() {
-				public void run() {
-					String playerSql;
-					String playerChoice = cbPlayersStats.getValue();
-					if (playerChoice.equals("All Players")) {
-						playerSql = "LIKE '%' OR tag IS NULL OR tag = ' '";
-					} else {
-						PlayerDao playerDao = new PlayerDaoImpl();
-						int playerID = playerDao.getPlayerIdByTag(playerChoice);
-						playerSql = "= " + playerID;
-					}
-					
-					String myCharacterChoice = cbMyCharacter.getValue();
-					String myCharacterSql;
-					if (myCharacterChoice.equals("All Characters")) {
-						myCharacterSql = "LIKE '%' OR name IS NULL OR name = ' '";
-					} else {
-						int myCharacterID = GeneralUtils.getCharacterID(myCharacterChoice);
-						myCharacterSql = "= " + myCharacterID;
-					}
-					
-					String opponentCharacterChoice = cbOpponentCharacter.getValue();
-					String opponentCharacterSql;
-					if (opponentCharacterChoice.equals("All Characters")) {
-						opponentCharacterSql = "LIKE '%' OR name IS NULL OR name = ' '";
-					} else {
-						int opponentCharacterID = GeneralUtils.getCharacterID(opponentCharacterChoice);
-						opponentCharacterSql = "= " + opponentCharacterID;
-					}
-					
-					String formatChoice = cbFormat.getValue();
-					String formatSql;
-					if (formatChoice.equals("All Formats")) {
-						formatSql = "LIKE '%' OR type IS NULL OR type = ' '";
-					} else {
-						formatSql = "= '" + formatChoice + "'";
-					}
-					
-					String typeChoice = cbType.getValue();
-					String typeSql;			
-					if (typeChoice.equals("All Types")) {
-						typeSql = "LIKE '%' OR format IS NULL OR format = ' '";
-					} else {
-						typeSql = "= '" + typeChoice + "'";
-					}
-					
-					String dateChoice = cbDate.getValue();
-					LocalDate startDate;
-					LocalDate endDate;
-					if (dateChoice.equals("Specify Date")) {
-						startDate = dpStartDate.getValue();
-						endDate = dpEndDate.getValue();
-					} else {
-						startDate = LocalDate.parse("2000-01-01");
-						endDate = LocalDate.now();
-					}
-					String startDateString = startDate.toString();
-					String endDateString = endDate.toString();
-
-					Stat stat = new Stat(playerSql, myCharacterSql, opponentCharacterSql, formatSql, typeSql, startDateString, endDateString);
-					StatDao statDao = new StatDaoImpl();
-					int wonSetCount = statDao.calculateSetsWon(stat);
-					int lostSetCount = statDao.calculateSetsLost(stat);
-					int[] wonGames = statDao.calculateGamesWonOnStages(stat);
-					int[] lostGames = statDao.calculateGamesLostOnStages(stat);
-					
-					String startDateFormatted = GeneralUtils.formatDate(startDateString);
-					String endDateFormatted = GeneralUtils.formatDate(endDateString);
-					
-					Platform.runLater(new Runnable() {
-						public void run() {
-							if (dateChoice.equals("All Time")) {
-								lblWhatsQueried.setText("Queried for: " + playerChoice + ", " + myCharacterChoice + ", " + opponentCharacterChoice 
-										+ ", All Time, " + formatChoice + ", " + typeChoice);
-							} else {
-								lblWhatsQueried.setText("Queried for: " + playerChoice + ", " + myCharacterChoice + ", " + opponentCharacterChoice 
-										+ ", " + startDateFormatted + " - " + endDateFormatted + ", " + formatChoice + ", " + typeChoice);				
-							}
-									
-							if (!playerChoice.equals("All Players")) {
-								lblSetCount.setText("Set Count Against " + playerChoice + ": " + wonSetCount + " - " + lostSetCount);
-							} else {
-								lblSetCount.setText("Total Set Count: " + wonSetCount + " - " + lostSetCount);
-							}
-							
-							DecimalFormat df = new DecimalFormat("#.##%");
-							ivBattlefield.setImage(new Image("main/assets/images/Battlefield.jpg"));
-							lblGameCountBattlefield.setText(wonGames[BATTLEFIELD_STAGEID] + " - " + lostGames[BATTLEFIELD_STAGEID]);
-							lblWinPercentBattlefield.setText(df.format((double) wonGames[BATTLEFIELD_STAGEID] / (wonGames[BATTLEFIELD_STAGEID] + lostGames[BATTLEFIELD_STAGEID])));
-							
-							ivDreamland.setImage(new Image("main/assets/images/Dreamland.png"));
-							lblGameCountDreamland.setText(wonGames[DREAMLAND_STAGEID] + " - " + lostGames[DREAMLAND_STAGEID]);
-							lblWinPercentDreamland.setText(df.format((double) wonGames[DREAMLAND_STAGEID] / (wonGames[DREAMLAND_STAGEID] + lostGames[DREAMLAND_STAGEID])));
-							
-							ivYoshisStory.setImage(new Image("main/assets/images/YoshisStory.png"));
-							lblGameCountYoshisStory.setText(wonGames[YOSHIS_STORY_STAGEID] + " - " + lostGames[YOSHIS_STORY_STAGEID]);
-							lblWinPercentYoshisStory.setText(df.format((double) wonGames[YOSHIS_STORY_STAGEID] / (wonGames[YOSHIS_STORY_STAGEID] + lostGames[YOSHIS_STORY_STAGEID])));
-							
-							ivFountainOfDreams.setImage(new Image("main/assets/images/FountainOfDreams.jpg"));
-							lblGameCountFountainOfDreams.setText(wonGames[FOUNTAIN_OF_DREAMS_STAGEID] + " - " + lostGames[FOUNTAIN_OF_DREAMS_STAGEID]);
-							lblWinPercentFountainOfDreams.setText(df.format((double) wonGames[FOUNTAIN_OF_DREAMS_STAGEID] / (wonGames[FOUNTAIN_OF_DREAMS_STAGEID] + lostGames[FOUNTAIN_OF_DREAMS_STAGEID])));
-							
-							ivFinalDestination.setImage(new Image("main/assets/images/FinalDestination.jpg"));
-							lblGameCountFinalDestination.setText(wonGames[FINAL_DESTINATION_STAGEID] + " - " + lostGames[FINAL_DESTINATION_STAGEID]);
-							lblWinPercentFinalDestination.setText(df.format((double) wonGames[FINAL_DESTINATION_STAGEID] / (wonGames[FINAL_DESTINATION_STAGEID] + lostGames[FINAL_DESTINATION_STAGEID])));
-							
-							ivPokemonStadium.setImage(new Image("main/assets/images/PokemonStadium.jpg"));
-							lblGameCountPokemonStadium.setText(wonGames[POKEMON_STADIUM_STAGEID] + " - " + lostGames[POKEMON_STADIUM_STAGEID]);
-							lblWinPercentPokemonStadium.setText(df.format((double) wonGames[POKEMON_STADIUM_STAGEID] / (wonGames[POKEMON_STADIUM_STAGEID] + lostGames[POKEMON_STADIUM_STAGEID])));
-						}
-					});
+			new Thread(() -> {
+				String playerSql;
+				String playerChoice = cbPlayersStats.getValue();
+				if (playerChoice.equals("All Players")) {
+					playerSql = "LIKE '%' OR tag IS NULL OR tag = ' '";
+				} else {
+					PlayerDao playerDao = new PlayerDaoImpl();
+					int playerID = playerDao.getPlayerIdByTag(playerChoice);
+					playerSql = "= " + playerID;
 				}
+				
+				String myCharacterChoice = cbMyCharacter.getValue();
+				String myCharacterSql;
+				if (myCharacterChoice.equals("All Characters")) {
+					myCharacterSql = "LIKE '%' OR name IS NULL OR name = ' '";
+				} else {
+					int myCharacterID = GeneralUtils.getCharacterID(myCharacterChoice);
+					myCharacterSql = "= " + myCharacterID;
+				}
+				
+				String opponentCharacterChoice = cbOpponentCharacter.getValue();
+				String opponentCharacterSql;
+				if (opponentCharacterChoice.equals("All Characters")) {
+					opponentCharacterSql = "LIKE '%' OR name IS NULL OR name = ' '";
+				} else {
+					int opponentCharacterID = GeneralUtils.getCharacterID(opponentCharacterChoice);
+					opponentCharacterSql = "= " + opponentCharacterID;
+				}
+				
+				String formatChoice = cbFormat.getValue();
+				String formatSql;
+				if (formatChoice.equals("All Formats")) {
+					formatSql = "LIKE '%' OR type IS NULL OR type = ' '";
+				} else {
+					formatSql = "= '" + formatChoice + "'";
+				}
+				
+				String typeChoice = cbType.getValue();
+				String typeSql;			
+				if (typeChoice.equals("All Types")) {
+					typeSql = "LIKE '%' OR format IS NULL OR format = ' '";
+				} else {
+					typeSql = "= '" + typeChoice + "'";
+				}
+				
+				String dateChoice = cbDate.getValue();
+				LocalDate startDate;
+				LocalDate endDate;
+				if (dateChoice.equals("Specify Date")) {
+					startDate = dpStartDate.getValue();
+					endDate = dpEndDate.getValue();
+				} else {
+					startDate = LocalDate.parse("2000-01-01");
+					endDate = LocalDate.now();
+				}
+				String startDateString = startDate.toString();
+				String endDateString = endDate.toString();
+
+				Stat stat = new Stat(playerSql, myCharacterSql, opponentCharacterSql, formatSql, typeSql, startDateString, endDateString);
+				StatDao statDao = new StatDaoImpl();
+				int wonSetCount = statDao.calculateSetsWon(stat);
+				int lostSetCount = statDao.calculateSetsLost(stat);
+				int[] wonGames = statDao.calculateGamesWonOnStages(stat);
+				int[] lostGames = statDao.calculateGamesLostOnStages(stat);
+				
+				String startDateFormatted = GeneralUtils.formatDate(startDateString);
+				String endDateFormatted = GeneralUtils.formatDate(endDateString);
+				
+				Platform.runLater(new Runnable() {
+					public void run() {
+						if (dateChoice.equals("All Time")) {
+							lblWhatsQueried.setText("Queried for: " + playerChoice + ", " + myCharacterChoice + ", " + opponentCharacterChoice 
+									+ ", All Time, " + formatChoice + ", " + typeChoice);
+						} else {
+							lblWhatsQueried.setText("Queried for: " + playerChoice + ", " + myCharacterChoice + ", " + opponentCharacterChoice 
+									+ ", " + startDateFormatted + " - " + endDateFormatted + ", " + formatChoice + ", " + typeChoice);				
+						}
+								
+						if (!playerChoice.equals("All Players")) {
+							lblSetCount.setText("Set Count Against " + playerChoice + ": " + wonSetCount + " - " + lostSetCount);
+						} else {
+							lblSetCount.setText("Total Set Count: " + wonSetCount + " - " + lostSetCount);
+						}
+						
+						DecimalFormat df = new DecimalFormat("#.##%");
+						ivBattlefield.setImage(new Image("main/assets/images/Battlefield.jpg"));
+						lblGameCountBattlefield.setText(wonGames[BATTLEFIELD_STAGEID] + " - " + lostGames[BATTLEFIELD_STAGEID]);
+						lblWinPercentBattlefield.setText(df.format((double) wonGames[BATTLEFIELD_STAGEID] / (wonGames[BATTLEFIELD_STAGEID] + lostGames[BATTLEFIELD_STAGEID])));
+						
+						ivDreamland.setImage(new Image("main/assets/images/Dreamland.png"));
+						lblGameCountDreamland.setText(wonGames[DREAMLAND_STAGEID] + " - " + lostGames[DREAMLAND_STAGEID]);
+						lblWinPercentDreamland.setText(df.format((double) wonGames[DREAMLAND_STAGEID] / (wonGames[DREAMLAND_STAGEID] + lostGames[DREAMLAND_STAGEID])));
+						
+						ivYoshisStory.setImage(new Image("main/assets/images/YoshisStory.png"));
+						lblGameCountYoshisStory.setText(wonGames[YOSHIS_STORY_STAGEID] + " - " + lostGames[YOSHIS_STORY_STAGEID]);
+						lblWinPercentYoshisStory.setText(df.format((double) wonGames[YOSHIS_STORY_STAGEID] / (wonGames[YOSHIS_STORY_STAGEID] + lostGames[YOSHIS_STORY_STAGEID])));
+						
+						ivFountainOfDreams.setImage(new Image("main/assets/images/FountainOfDreams.jpg"));
+						lblGameCountFountainOfDreams.setText(wonGames[FOUNTAIN_OF_DREAMS_STAGEID] + " - " + lostGames[FOUNTAIN_OF_DREAMS_STAGEID]);
+						lblWinPercentFountainOfDreams.setText(df.format((double) wonGames[FOUNTAIN_OF_DREAMS_STAGEID] / (wonGames[FOUNTAIN_OF_DREAMS_STAGEID] + lostGames[FOUNTAIN_OF_DREAMS_STAGEID])));
+						
+						ivFinalDestination.setImage(new Image("main/assets/images/FinalDestination.jpg"));
+						lblGameCountFinalDestination.setText(wonGames[FINAL_DESTINATION_STAGEID] + " - " + lostGames[FINAL_DESTINATION_STAGEID]);
+						lblWinPercentFinalDestination.setText(df.format((double) wonGames[FINAL_DESTINATION_STAGEID] / (wonGames[FINAL_DESTINATION_STAGEID] + lostGames[FINAL_DESTINATION_STAGEID])));
+						
+						ivPokemonStadium.setImage(new Image("main/assets/images/PokemonStadium.jpg"));
+						lblGameCountPokemonStadium.setText(wonGames[POKEMON_STADIUM_STAGEID] + " - " + lostGames[POKEMON_STADIUM_STAGEID]);
+						lblWinPercentPokemonStadium.setText(df.format((double) wonGames[POKEMON_STADIUM_STAGEID] / (wonGames[POKEMON_STADIUM_STAGEID] + lostGames[POKEMON_STADIUM_STAGEID])));
+					}
+				});
 			}).start();		
 				
 		});
@@ -2714,148 +2712,146 @@ public class app extends Application {
 			}
 		});
 		tournamentReportPaneTop.add(btGetReport, 0, 5);
-		btGetReport.setOnAction(e -> {
-			new Thread(new Runnable() {
-				public void run() {
-					String date = cbDate.getValue();
-			    	VBox root = new VBox();
-			    	MoneyDao moneyDao = new MoneyDaoImpl();
-			    	List<Tournament> tournaments;
-					TournamentDao tournamentDao = new TournamentDaoImpl();
-			    	
-					if (date.equals("Specify Date")) {	
-						LocalDate startDate = dpStartDate.getValue();
-						LocalDate endDate = dpEndDate.getValue();
+		btGetReport.setOnAction(e1 -> {
+			new Thread(() -> {
+				String date = cbDate.getValue();
+		    	VBox root = new VBox();
+		    	MoneyDao moneyDao = new MoneyDaoImpl();
+		    	List<Tournament> tournaments;
+				TournamentDao tournamentDao = new TournamentDaoImpl();
+		    	
+				if (date.equals("Specify Date")) {	
+					LocalDate startDate = dpStartDate.getValue();
+					LocalDate endDate = dpEndDate.getValue();
 
-						if (startDate == null || startDate.toString().isEmpty() || endDate == null || endDate.toString().isEmpty()) {
-					    	Alert alSpecifyDate = new Alert(AlertType.INFORMATION);
-					    	alSpecifyDate.setTitle("Specified Date");
-					    	alSpecifyDate.setHeaderText(null);
-					    	alSpecifyDate.setContentText("Be sure that the start date and end date fields are not empty.");
-					    	alSpecifyDate.showAndWait();	
-					    	return;
-						}
-						
-						tournaments = tournamentDao.getTournamentsByDate(userID, startDate.toString(), endDate.toString());
-					} else {
-						tournaments = tournamentDao.getAllTournaments(userID);
+					if (startDate == null || startDate.toString().isEmpty() || endDate == null || endDate.toString().isEmpty()) {
+				    	Alert alSpecifyDate = new Alert(AlertType.INFORMATION);
+				    	alSpecifyDate.setTitle("Specified Date");
+				    	alSpecifyDate.setHeaderText(null);
+				    	alSpecifyDate.setContentText("Be sure that the start date and end date fields are not empty.");
+				    	alSpecifyDate.showAndWait();	
+				    	return;
 					}
 					
-					int tournamentRowCount = tournaments.size();
-					if (tournamentRowCount != 0) {
-				    	SetDao setDao = new SetDaoImpl();
-				    	PlayerDao playerDao = new PlayerDaoImpl();
-				 		Hyperlink[] hlTournaments = new Hyperlink[tournamentRowCount];
-				    	for (int i = 0; i < tournamentRowCount; i++) {
-				 			if (i != 0) {
-			       				root.getChildren().addAll(new Label());
-				 			}
-
-				 			tournamentID = tournaments.get(i).getTournamentID();
-				 			String nameTournament = tournaments.get(i).getTournamentName();
-				 			String dateTournament = tournaments.get(i).getDateOfTournament();
-				 			String formattedDate = GeneralUtils.formatDate(dateTournament);
-				 			
-				 			hlTournaments[i] = new Hyperlink();
-					 		hlTournaments[i].setText((i + 1) + ". " + nameTournament + " - " + formattedDate);
-					 		hlTournaments[i].setFont(Font.font("Verdana", FontWeight.BOLD, 16));
-			   				root.getChildren().addAll(hlTournaments[i]);
-			   				
-			   				//
-					        int tournamentRecordLocation = tournaments.get(i).getTournamentID(); 			        		
-				    	 	int myPlacingTournament = tournaments.get(i).getMyPlacing();
-				    	 	String stateTournament = tournaments.get(i).getState();
-				    	 	String cityTournament = tournaments.get(i).getCity();
-				    	 	String notesTournament = tournaments.get(i).getNotes();			 
-				    	 	
-				        	Money money = moneyDao.getMoneyByTournamentId(tournamentRecordLocation);
-				    	 	//int moneyRecordLocation = moneyDao.getMoneyIdByTournamentId(tournamentRecordLocation);
-				    	 	int moneyRecordLocation = money.getMoneyID();
-				        	String prizeMoneyMoney = Integer.toString(money.getPrizeMoney());
-				        	String moneyMatchMoney = Integer.toString(money.getMoneyMatch());
-				        	String entryFeeMoney = Integer.toString(money.getEntryFee());
-				        	String venueFeeMoney = Integer.toString(money.getVenueFee());
-				        	String travelExpenseMoney = Integer.toString(money.getTravelExpense());
-					        hlTournaments[i].setOnAction(e -> {
-					        	//setSpecifiedTournament()
-		    					lastSceneID = TOURNAMENT_REPORT_SCENE;
-					        	tournamentID = tournamentRecordLocation;
-					        	lblSpecifiedTournament.setText(nameTournament);
-					        	tfTournamentNameST.setText(nameTournament);
-					    		tfMyPlacingST.setText(String.valueOf(myPlacingTournament));
-					    		dpDateOfTournamentST.setValue(LocalDate.parse(dateTournament));
-					    		tfStateST.setText(stateTournament);
-					    		tfCityST.setText(cityTournament);
-					    		taNotesST.setText(notesTournament);
-					        	
-					    		//setSpecifiedMoney()
-					        	moneyID = moneyRecordLocation;
-								lblSpecifiedMoneyDetails.setText(nameTournament + " - Money Details");
-					    		tfPrizeMoneyM.setText(prizeMoneyMoney);
-					        	tfMoneyMatchM.setText(moneyMatchMoney);
-					        	tfEntryFeeM.setText(entryFeeMoney);
-					        	tfVenueFeeM.setText(venueFeeMoney);
-					        	tfTravelExpenseM.setText(travelExpenseMoney);
-					    		
-					        	printSets();
-					        	theStage.setScene(specifiedTournamentScene);
-							});
-			   				
-			   				List<Set> sets = setDao.getAllSetsByTournamentId(tournamentID);
-					 		int setRowCount = sets.size();
-					 		Hyperlink hlSets[] = new Hyperlink[setRowCount];
-				 			for (int j = 0; j < setRowCount; j++) {
-				 				hlSets[j] = new Hyperlink();
-			    				String bracketRoundSet = sets.get(j).getBracketRound();
-			    				String bracketRoundHeader = "";
-			    		 		if (!bracketRoundSet.isEmpty() || !bracketRoundSet.trim().equals("")) {
-			    		 			bracketRoundHeader = " - " + bracketRoundSet;
-			    		 		}
-			    				
-			    				playerID = sets.get(j).getPlayerID();
-			    				String tagSet = playerDao.getPlayerTagById(playerID);
-			    				String outcomeSet = sets.get(j).getOutcome();
-			    				
-			    				hlSets[j].setText("\t• " + tagSet + " - " + bracketRoundHeader + " - " + outcomeSet);
-			    				hlSets[j].setFont(Font.font("Verdana", 13));
-			    				root.getChildren().addAll(hlSets[j]);
-			    				
-			    				//print sets code
-			    				int setRecordLocation =  sets.get(i).getSetID();
-			    		 		String typeSet = sets.get(i).getType();
-			    		 		String formatSet = sets.get(i).getFormat();
-			    		 		String notesSet = sets.get(i).getNotes();
-			    		 		String headerSet = "Set " + (i + 1) + ": " + tagSet + bracketRoundHeader + " - " + outcomeSet;
-			    				hlSets[i].setOnAction(e -> {
-			    					lastSceneID = TOURNAMENT_REPORT_SCENE;
-			    					lblSpecifiedSet.setText(headerSet);
-			    			    	setID = setRecordLocation;
-			    			    	playerDao.populatePlayerComboBox(cbPlayerSS, userID);
-			    			    	printGames();
-			    			    	
-			    			    	//getSpecifiedSet();
-			    					cbPlayerSS.setValue(tagSet);
-			    					cbOutcomeSS.setValue(outcomeSet);
-			    					cbTypeSS.setValue(typeSet);
-			    					cbFormatSS.setValue(formatSet);
-			    					tfBracketRoundSS.setText(bracketRoundSet);
-			    					taNotesSS.setText(notesSet);
-			    			    	
-			    			    	theStage.setScene(specifiedSetScene);
-			    				});
-			    				//
-				 			}
-				 		}    	
-					} else {
-		   				root.getChildren().addAll(new Label("No tournaments with those specifications exist."));
-					}
-					
-					Platform.runLater(new Runnable() {
-						public void run() {
-							tournamentReportScrollPane.setContent(root);
-						}
-					});
+					tournaments = tournamentDao.getTournamentsByDate(userID, startDate.toString(), endDate.toString());
+				} else {
+					tournaments = tournamentDao.getAllTournaments(userID);
 				}
+				
+				int tournamentRowCount = tournaments.size();
+				if (tournamentRowCount != 0) {
+			    	SetDao setDao = new SetDaoImpl();
+			    	PlayerDao playerDao = new PlayerDaoImpl();
+			 		Hyperlink[] hlTournaments = new Hyperlink[tournamentRowCount];
+			    	for (int i = 0; i < tournamentRowCount; i++) {
+			 			if (i != 0) {
+		       				root.getChildren().addAll(new Label());
+			 			}
+
+			 			tournamentID = tournaments.get(i).getTournamentID();
+			 			String nameTournament = tournaments.get(i).getTournamentName();
+			 			String dateTournament = tournaments.get(i).getDateOfTournament();
+			 			String formattedDate = GeneralUtils.formatDate(dateTournament);
+			 			
+			 			hlTournaments[i] = new Hyperlink();
+				 		hlTournaments[i].setText((i + 1) + ". " + nameTournament + " - " + formattedDate);
+				 		hlTournaments[i].setFont(Font.font("Verdana", FontWeight.BOLD, 16));
+		   				root.getChildren().addAll(hlTournaments[i]);
+		   				
+		   				//
+				        int tournamentRecordLocation = tournaments.get(i).getTournamentID(); 			        		
+			    	 	int myPlacingTournament = tournaments.get(i).getMyPlacing();
+			    	 	String stateTournament = tournaments.get(i).getState();
+			    	 	String cityTournament = tournaments.get(i).getCity();
+			    	 	String notesTournament = tournaments.get(i).getNotes();			 
+			    	 	
+			        	Money money = moneyDao.getMoneyByTournamentId(tournamentRecordLocation);
+			    	 	//int moneyRecordLocation = moneyDao.getMoneyIdByTournamentId(tournamentRecordLocation);
+			    	 	int moneyRecordLocation = money.getMoneyID();
+			        	String prizeMoneyMoney = Integer.toString(money.getPrizeMoney());
+			        	String moneyMatchMoney = Integer.toString(money.getMoneyMatch());
+			        	String entryFeeMoney = Integer.toString(money.getEntryFee());
+			        	String venueFeeMoney = Integer.toString(money.getVenueFee());
+			        	String travelExpenseMoney = Integer.toString(money.getTravelExpense());
+				        hlTournaments[i].setOnAction(e2 -> {
+				        	//setSpecifiedTournament()
+	    					lastSceneID = TOURNAMENT_REPORT_SCENE;
+				        	tournamentID = tournamentRecordLocation;
+				        	lblSpecifiedTournament.setText(nameTournament);
+				        	tfTournamentNameST.setText(nameTournament);
+				    		tfMyPlacingST.setText(String.valueOf(myPlacingTournament));
+				    		dpDateOfTournamentST.setValue(LocalDate.parse(dateTournament));
+				    		tfStateST.setText(stateTournament);
+				    		tfCityST.setText(cityTournament);
+				    		taNotesST.setText(notesTournament);
+				        	
+				    		//setSpecifiedMoney()
+				        	moneyID = moneyRecordLocation;
+							lblSpecifiedMoneyDetails.setText(nameTournament + " - Money Details");
+				    		tfPrizeMoneyM.setText(prizeMoneyMoney);
+				        	tfMoneyMatchM.setText(moneyMatchMoney);
+				        	tfEntryFeeM.setText(entryFeeMoney);
+				        	tfVenueFeeM.setText(venueFeeMoney);
+				        	tfTravelExpenseM.setText(travelExpenseMoney);
+				    		
+				        	printSets();
+				        	theStage.setScene(specifiedTournamentScene);
+						});
+		   				
+		   				List<Set> sets = setDao.getAllSetsByTournamentId(tournamentID);
+				 		int setRowCount = sets.size();
+				 		Hyperlink hlSets[] = new Hyperlink[setRowCount];
+			 			for (int j = 0; j < setRowCount; j++) {
+			 				hlSets[j] = new Hyperlink();
+		    				String bracketRoundSet = sets.get(j).getBracketRound();
+		    				String bracketRoundHeader = "";
+		    		 		if (!bracketRoundSet.isEmpty() || !bracketRoundSet.trim().equals("")) {
+		    		 			bracketRoundHeader = " - " + bracketRoundSet;
+		    		 		}
+		    				
+		    				playerID = sets.get(j).getPlayerID();
+		    				String tagSet = playerDao.getPlayerTagById(playerID);
+		    				String outcomeSet = sets.get(j).getOutcome();
+		    				
+		    				hlSets[j].setText("\t• " + tagSet + " - " + bracketRoundHeader + " - " + outcomeSet);
+		    				hlSets[j].setFont(Font.font("Verdana", 13));
+		    				root.getChildren().addAll(hlSets[j]);
+		    				
+		    				//print sets code
+		    				int setRecordLocation =  sets.get(i).getSetID();
+		    		 		String typeSet = sets.get(i).getType();
+		    		 		String formatSet = sets.get(i).getFormat();
+		    		 		String notesSet = sets.get(i).getNotes();
+		    		 		String headerSet = "Set " + (i + 1) + ": " + tagSet + bracketRoundHeader + " - " + outcomeSet;
+		    				hlSets[i].setOnAction(e3 -> {
+		    					lastSceneID = TOURNAMENT_REPORT_SCENE;
+		    					lblSpecifiedSet.setText(headerSet);
+		    			    	setID = setRecordLocation;
+		    			    	playerDao.populatePlayerComboBox(cbPlayerSS, userID);
+		    			    	printGames();
+		    			    	
+		    			    	//getSpecifiedSet();
+		    					cbPlayerSS.setValue(tagSet);
+		    					cbOutcomeSS.setValue(outcomeSet);
+		    					cbTypeSS.setValue(typeSet);
+		    					cbFormatSS.setValue(formatSet);
+		    					tfBracketRoundSS.setText(bracketRoundSet);
+		    					taNotesSS.setText(notesSet);
+		    			    	
+		    			    	theStage.setScene(specifiedSetScene);
+		    				});
+		    				//
+			 			}
+			 		}    	
+				} else {
+	   				root.getChildren().addAll(new Label("No tournaments with those specifications exist."));
+				}
+				
+				Platform.runLater(new Runnable() {
+					public void run() {
+						tournamentReportScrollPane.setContent(root);
+					}
+				});
 			}).start();	
 		});
 		tournamentReportPaneBottom.add(btMainMenu, 0, 0);
@@ -2913,137 +2909,135 @@ public class app extends Application {
 		
 		moneyReportPaneTop.add(btGetReport, 0, 5);
 		btGetReport.setOnAction(e -> {
-			new Thread(new Runnable() {
-				public void run() {
-					String date = cbDate.getValue();
-			    	GridPane moneyReportCenterPane = new GridPane();
-			    	String totalMoneyString = null;
-			    	MoneyDao moneyDao = new MoneyDaoImpl();
-			    	List<Tournament> tournaments;
-					TournamentDao tournamentDao = new TournamentDaoImpl();
-			    	
-					if (date.equals("Specify Date")) {	
-						LocalDate startDate = dpStartDate.getValue();
-						LocalDate endDate = dpEndDate.getValue();
+			new Thread(() -> {
+				String date = cbDate.getValue();
+		    	GridPane moneyReportCenterPane = new GridPane();
+		    	String totalMoneyString = null;
+		    	MoneyDao moneyDao = new MoneyDaoImpl();
+		    	List<Tournament> tournaments;
+				TournamentDao tournamentDao = new TournamentDaoImpl();
+		    	
+				if (date.equals("Specify Date")) {	
+					LocalDate startDate = dpStartDate.getValue();
+					LocalDate endDate = dpEndDate.getValue();
 
-						if (startDate == null || startDate.toString().isEmpty() || endDate == null || endDate.toString().isEmpty()) {
-					    	Alert alSpecifyDate = new Alert(AlertType.INFORMATION);
-					    	alSpecifyDate.setTitle("Specified Date");
-					    	alSpecifyDate.setHeaderText(null);
-					    	alSpecifyDate.setContentText("Be sure that the start date and end date fields are not empty.");
-					    	alSpecifyDate.showAndWait();	
-					    	return;
-						}
-						
-						tournaments = tournamentDao.getTournamentsByDate(userID, startDate.toString(), endDate.toString());
-					} else {
-						tournaments = tournamentDao.getAllTournaments(userID);
-					}
-										
-					int tournamentRowCount = tournaments.size();
-					if (tournamentRowCount != 0) {
-						DecimalFormat dfMoney = new DecimalFormat("$#.00");
-						int prizeMoneyTotal = 0;
-				 		int moneyMatchTotal = 0;
-				 		int entryFeeTotal = 0;
-				 		int venueFeeTotal = 0;
-				 		int travelExpenseTotal = 0;
-				 		Label[] lblTournaments = new Label[tournamentRowCount];
-				 		int gridPaneRowCount = 1;
-				    	for (int i = 0; i < tournamentRowCount; i++) {
-				    		//creates a line break
-				 			if (i == 0) {
-				 				String blankSpace = "     ";
-					 			Font moneyHeaderFont = Font.font("Verdana", FontWeight.BOLD, 14);
-					 			Label lblBlankLine = new Label("\t\t");
-					 			Label prizeMoney = new Label("Prize Money" + blankSpace);
-					 			Label moneyMatch = new Label("Money Match" + blankSpace);
-					 			Label entryFee = new Label("Entry Fee" + blankSpace);
-					 			Label venueFee = new Label("Venue Fee" + blankSpace);
-					 			Label travelExpenses = new Label("Travel Expenses");
-
-					 			lblBlankLine.setFont(moneyHeaderFont);
-					 			prizeMoney.setFont(moneyHeaderFont);
-					 			moneyMatch.setFont(moneyHeaderFont);
-					 			entryFee.setFont(moneyHeaderFont);
-					 			venueFee.setFont(moneyHeaderFont);
-					 			travelExpenses.setFont(moneyHeaderFont);
-					 			
-					 			moneyReportCenterPane.add(lblBlankLine, 0, 0);
-					 			moneyReportCenterPane.add(prizeMoney, 1, 0);
-					 			moneyReportCenterPane.add(moneyMatch, 2, 0);
-					 			moneyReportCenterPane.add(entryFee, 3, 0);
-					 			moneyReportCenterPane.add(venueFee, 4, 0);
-					 			moneyReportCenterPane.add(travelExpenses, 5, 0);
-					 			moneyReportCenterPane.add(new Label(""), 0, 1);
-				 			} else {
-					 			moneyReportCenterPane.add(new Label("\t"), 0, gridPaneRowCount);
-					 			gridPaneRowCount += 1;	
-				 			}
-
-				 			tournamentID = tournaments.get(i).getTournamentID();
-				 			String nameTournament = tournaments.get(i).getTournamentName();
-				 			String dateTournament = tournaments.get(i).getDateOfTournament();
-				 			String formattedDate = GeneralUtils.formatDate(dateTournament);
-				 			
-				 			lblTournaments[i] = new Label();
-				 			lblTournaments[i].setText((i + 1) + ". " + nameTournament + " - " + formattedDate);
-				 			lblTournaments[i].setFont(Font.font("Verdana", FontWeight.BOLD, 16));
-				 			moneyReportCenterPane.add(lblTournaments[i], 0, gridPaneRowCount, 5, 1); //(i + 1) to not conflict with header information
-			 				gridPaneRowCount += 1;
-
-				 			Money money = moneyDao.getMoneyByTournamentId(tournamentID);
-				 			int prizeMoney = money.getPrizeMoney();
-				 			int moneyMatch = money.getMoneyMatch();
-				 			int entryFee = money.getEntryFee();
-				 			int venueFee = money.getVenueFee();
-				 			int travelExpense = money.getTravelExpense();
-				 			
-			   				prizeMoneyTotal += prizeMoney;
-				 			moneyMatchTotal += moneyMatch;
-				 			entryFeeTotal += entryFee;
-				 			venueFeeTotal += venueFee;
-				 			travelExpenseTotal += travelExpense;
-
-				 			Label lblPrizeMoney = new Label(dfMoney.format(prizeMoney));
-				 			Label lblMoneyMatch = new Label(dfMoney.format(moneyMatch));
-				 			Label lblEntryFee = new Label(dfMoney.format(entryFee));
-				 			Label lblVenueFee = new Label(dfMoney.format(venueFee));
-				 			Label lblTravelExpense = new Label(dfMoney.format(travelExpense));
-
-				 			Font moneyInformationFont = Font.font("Verdana", 12);
-				 			lblPrizeMoney.setFont(moneyInformationFont);
-				 			lblMoneyMatch.setFont(moneyInformationFont);
-				 			lblEntryFee.setFont(moneyInformationFont);
-				 			lblVenueFee.setFont(moneyInformationFont);
-				 			lblTravelExpense.setFont(moneyInformationFont);
-
-				 			moneyReportCenterPane.add(new Label(""), 0, gridPaneRowCount);
-				 			moneyReportCenterPane.add(lblPrizeMoney, 1, gridPaneRowCount);
-				 			moneyReportCenterPane.add(lblMoneyMatch, 2, gridPaneRowCount);
-				 			moneyReportCenterPane.add(lblEntryFee, 3, gridPaneRowCount);
-				 			moneyReportCenterPane.add(lblVenueFee, 4, gridPaneRowCount);
-				 			moneyReportCenterPane.add(lblTravelExpense, 5, gridPaneRowCount);
-			 				gridPaneRowCount += 1; 
-				    	}
-				    	
-				    	//total money in footer
-				    	totalMoneyString = "Total: " + dfMoney.format(prizeMoneyTotal) + "\t\t" + dfMoney.format(moneyMatchTotal) + "\t\t" 
-								+ dfMoney.format(entryFeeTotal) + "\t\t" + dfMoney.format(venueFeeTotal) + "\t\t" 
-								+ dfMoney.format(travelExpenseTotal);
-						lblMoneyTotal.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
-					} else {
-						moneyReportCenterPane.getChildren().addAll(new Label("No tournaments with those specifications exist."));
+					if (startDate == null || startDate.toString().isEmpty() || endDate == null || endDate.toString().isEmpty()) {
+				    	Alert alSpecifyDate = new Alert(AlertType.INFORMATION);
+				    	alSpecifyDate.setTitle("Specified Date");
+				    	alSpecifyDate.setHeaderText(null);
+				    	alSpecifyDate.setContentText("Be sure that the start date and end date fields are not empty.");
+				    	alSpecifyDate.showAndWait();	
+				    	return;
 					}
 					
-			    	final String totalMoneyStringFinal = totalMoneyString; //appeasing compiler
-					Platform.runLater(new Runnable() {
-						public void run() {
-							moneyReportScrollPane.setContent(moneyReportCenterPane);
-							lblMoneyTotal.setText(totalMoneyStringFinal);
-						}
-					});
+					tournaments = tournamentDao.getTournamentsByDate(userID, startDate.toString(), endDate.toString());
+				} else {
+					tournaments = tournamentDao.getAllTournaments(userID);
 				}
+									
+				int tournamentRowCount = tournaments.size();
+				if (tournamentRowCount != 0) {
+					DecimalFormat dfMoney = new DecimalFormat("$#.00");
+					int prizeMoneyTotal = 0;
+			 		int moneyMatchTotal = 0;
+			 		int entryFeeTotal = 0;
+			 		int venueFeeTotal = 0;
+			 		int travelExpenseTotal = 0;
+			 		Label[] lblTournaments = new Label[tournamentRowCount];
+			 		int gridPaneRowCount = 1;
+			    	for (int i = 0; i < tournamentRowCount; i++) {
+			    		//creates a line break
+			 			if (i == 0) {
+			 				String blankSpace = "     ";
+				 			Font moneyHeaderFont = Font.font("Verdana", FontWeight.BOLD, 14);
+				 			Label lblBlankLine = new Label("\t\t");
+				 			Label prizeMoney = new Label("Prize Money" + blankSpace);
+				 			Label moneyMatch = new Label("Money Match" + blankSpace);
+				 			Label entryFee = new Label("Entry Fee" + blankSpace);
+				 			Label venueFee = new Label("Venue Fee" + blankSpace);
+				 			Label travelExpenses = new Label("Travel Expenses");
+
+				 			lblBlankLine.setFont(moneyHeaderFont);
+				 			prizeMoney.setFont(moneyHeaderFont);
+				 			moneyMatch.setFont(moneyHeaderFont);
+				 			entryFee.setFont(moneyHeaderFont);
+				 			venueFee.setFont(moneyHeaderFont);
+				 			travelExpenses.setFont(moneyHeaderFont);
+				 			
+				 			moneyReportCenterPane.add(lblBlankLine, 0, 0);
+				 			moneyReportCenterPane.add(prizeMoney, 1, 0);
+				 			moneyReportCenterPane.add(moneyMatch, 2, 0);
+				 			moneyReportCenterPane.add(entryFee, 3, 0);
+				 			moneyReportCenterPane.add(venueFee, 4, 0);
+				 			moneyReportCenterPane.add(travelExpenses, 5, 0);
+				 			moneyReportCenterPane.add(new Label(""), 0, 1);
+			 			} else {
+				 			moneyReportCenterPane.add(new Label("\t"), 0, gridPaneRowCount);
+				 			gridPaneRowCount += 1;	
+			 			}
+
+			 			tournamentID = tournaments.get(i).getTournamentID();
+			 			String nameTournament = tournaments.get(i).getTournamentName();
+			 			String dateTournament = tournaments.get(i).getDateOfTournament();
+			 			String formattedDate = GeneralUtils.formatDate(dateTournament);
+			 			
+			 			lblTournaments[i] = new Label();
+			 			lblTournaments[i].setText((i + 1) + ". " + nameTournament + " - " + formattedDate);
+			 			lblTournaments[i].setFont(Font.font("Verdana", FontWeight.BOLD, 16));
+			 			moneyReportCenterPane.add(lblTournaments[i], 0, gridPaneRowCount, 5, 1); //(i + 1) to not conflict with header information
+		 				gridPaneRowCount += 1;
+
+			 			Money money = moneyDao.getMoneyByTournamentId(tournamentID);
+			 			int prizeMoney = money.getPrizeMoney();
+			 			int moneyMatch = money.getMoneyMatch();
+			 			int entryFee = money.getEntryFee();
+			 			int venueFee = money.getVenueFee();
+			 			int travelExpense = money.getTravelExpense();
+			 			
+		   				prizeMoneyTotal += prizeMoney;
+			 			moneyMatchTotal += moneyMatch;
+			 			entryFeeTotal += entryFee;
+			 			venueFeeTotal += venueFee;
+			 			travelExpenseTotal += travelExpense;
+
+			 			Label lblPrizeMoney = new Label(dfMoney.format(prizeMoney));
+			 			Label lblMoneyMatch = new Label(dfMoney.format(moneyMatch));
+			 			Label lblEntryFee = new Label(dfMoney.format(entryFee));
+			 			Label lblVenueFee = new Label(dfMoney.format(venueFee));
+			 			Label lblTravelExpense = new Label(dfMoney.format(travelExpense));
+
+			 			Font moneyInformationFont = Font.font("Verdana", 12);
+			 			lblPrizeMoney.setFont(moneyInformationFont);
+			 			lblMoneyMatch.setFont(moneyInformationFont);
+			 			lblEntryFee.setFont(moneyInformationFont);
+			 			lblVenueFee.setFont(moneyInformationFont);
+			 			lblTravelExpense.setFont(moneyInformationFont);
+
+			 			moneyReportCenterPane.add(new Label(""), 0, gridPaneRowCount);
+			 			moneyReportCenterPane.add(lblPrizeMoney, 1, gridPaneRowCount);
+			 			moneyReportCenterPane.add(lblMoneyMatch, 2, gridPaneRowCount);
+			 			moneyReportCenterPane.add(lblEntryFee, 3, gridPaneRowCount);
+			 			moneyReportCenterPane.add(lblVenueFee, 4, gridPaneRowCount);
+			 			moneyReportCenterPane.add(lblTravelExpense, 5, gridPaneRowCount);
+		 				gridPaneRowCount += 1; 
+			    	}
+			    	
+			    	//total money in footer
+			    	totalMoneyString = "Total: " + dfMoney.format(prizeMoneyTotal) + "\t\t" + dfMoney.format(moneyMatchTotal) + "\t\t" 
+							+ dfMoney.format(entryFeeTotal) + "\t\t" + dfMoney.format(venueFeeTotal) + "\t\t" 
+							+ dfMoney.format(travelExpenseTotal);
+					lblMoneyTotal.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+				} else {
+					moneyReportCenterPane.getChildren().addAll(new Label("No tournaments with those specifications exist."));
+				}
+				
+		    	final String totalMoneyStringFinal = totalMoneyString; //appeasing compiler
+				Platform.runLater(new Runnable() {
+					public void run() {
+						moneyReportScrollPane.setContent(moneyReportCenterPane);
+						lblMoneyTotal.setText(totalMoneyStringFinal);
+					}
+				});
 			}).start();
 		});
 		
