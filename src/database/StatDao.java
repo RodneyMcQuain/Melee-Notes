@@ -1,4 +1,6 @@
-package main;
+package database;
+
+import main.Stat;
 
 public interface StatDao {
 	public int calculateSetsWon(Stat stat);

@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.TiltProgressNote;
 
 public interface TiltProgressNoteDao {
 	public List<TiltProgressNote> getAllTiltProgressNotesByTiltTypeId(int tiltTypeID);

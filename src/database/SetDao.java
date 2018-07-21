@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.Set;
 
 public interface SetDao {
 	public List<Set> getAllSetsByTournamentId(int tournamentID);

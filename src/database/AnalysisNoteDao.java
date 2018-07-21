@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.AnalysisNote;
 
 public interface AnalysisNoteDao {
 	public List<AnalysisNote> getAllAnalysisNotes(int userID);

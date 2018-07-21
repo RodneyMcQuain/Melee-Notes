@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.TiltType;
 
 public interface TiltTypeDao {
 	public List<TiltType> getAllTiltTypes(int userID);

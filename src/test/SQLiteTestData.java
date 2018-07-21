@@ -4,7 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import main.SQLiteUtils;
+import database.SQLiteUtils;
 
 public class SQLiteTestData {
 	public static void populateUser() {

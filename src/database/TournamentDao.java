@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.Tournament;
 
 public interface TournamentDao {
 	public List<Tournament> getAllTournaments(int userID);

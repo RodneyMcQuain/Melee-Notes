@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.CharacterNote;
 
 public interface CharacterNoteDao {
 	public List<CharacterNote> getAllCharacterNotesByCharacterId(int userID, int characterID);

@@ -5,14 +5,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 import org.junit.Test;
+
+import database.MoneyDao;
+import database.MoneyDaoImpl;
+import database.TournamentDao;
+import database.TournamentDaoImpl;
+
 import static org.junit.Assert.assertEquals;
 
 import main.Money;
-import main.MoneyDao;
-import main.MoneyDaoImpl;
 import main.Tournament;
-import main.TournamentDao;
-import main.TournamentDaoImpl;
 
 public class MoneyReportTest {
 	

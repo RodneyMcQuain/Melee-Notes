@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.Game;
 
 public interface GameDao {
 	public List<Game> getAllGamesBySetId(int setID);

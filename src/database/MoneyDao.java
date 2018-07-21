@@ -1,5 +1,7 @@
-package main;
+package database;
 import java.util.List;
+
+import main.Money;
 
 public interface MoneyDao {
 	public List<Money> getAllMoneysByTournamentId(int tournamentID);

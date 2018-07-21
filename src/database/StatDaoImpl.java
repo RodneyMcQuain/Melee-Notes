@@ -1,7 +1,9 @@
-package main;
+package database;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import main.Stat;
 
 public class StatDaoImpl implements StatDao {
 

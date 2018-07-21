@@ -1,9 +1,11 @@
-package main;
+package database;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import main.TiltProgressNote;
 
 public class TiltProgressNoteDaoImpl implements TiltProgressNoteDao {
 	List<TiltProgressNote> tiltProgressNotes;

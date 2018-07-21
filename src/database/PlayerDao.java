@@ -1,7 +1,8 @@
-package main;
+package database;
 import java.util.List;
 
 import javafx.scene.control.ComboBox;
+import main.Player;
 
 public interface PlayerDao {
 	public List<Player> getAllPlayers(int userID);

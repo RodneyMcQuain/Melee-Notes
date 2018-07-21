@@ -1,9 +1,11 @@
-package main;
+package database;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
+import main.Tournament;
 
 public class TournamentDaoImpl implements TournamentDao {
 	List<Tournament> tournaments;

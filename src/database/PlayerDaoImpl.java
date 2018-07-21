@@ -1,4 +1,4 @@
-package main;
+package database;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.control.ComboBox;
+import main.Player;
 
 public class PlayerDaoImpl implements PlayerDao {
 	List<Player> players;

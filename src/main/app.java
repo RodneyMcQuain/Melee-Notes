@@ -4,6 +4,27 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import database.AnalysisNoteDao;
+import database.AnalysisNoteDaoImpl;
+import database.CharacterNoteDao;
+import database.CharacterNoteDaoImpl;
+import database.GameDao;
+import database.GameDaoImpl;
+import database.MoneyDao;
+import database.MoneyDaoImpl;
+import database.PlayerDao;
+import database.PlayerDaoImpl;
+import database.SQLiteUtils;
+import database.SetDao;
+import database.SetDaoImpl;
+import database.StatDao;
+import database.StatDaoImpl;
+import database.TiltProgressNoteDao;
+import database.TiltProgressNoteDaoImpl;
+import database.TiltTypeDao;
+import database.TiltTypeDaoImpl;
+import database.TournamentDao;
+import database.TournamentDaoImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
@@ -3477,4 +3498,17 @@ public class app extends Application {
 //	}
 //    
 //    
+	
+	public Button createBackButton() {
+		FixedSizeStack<Scene> sceneStack = new FixedSizeStack<Scene>(10);
+		Scene currentScene = theStage.getScene();
+		
+		Button btBack = new Button("Back");
+		btBack.setOnAction(e -> {
+			Scene goToScene = sceneStack.pop();
+			theStage.setScene(goToScene);
+		});
+
+		return btBack;
+	}
 }

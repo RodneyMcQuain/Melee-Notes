@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 
 import org.junit.Test;
+
+import database.StatDao;
+import database.StatDaoImpl;
+
 import static org.junit.Assert.assertEquals;
 
 import main.Stat;
-import main.StatDao;
-import main.StatDaoImpl;
 
 public class StatTest {
 
